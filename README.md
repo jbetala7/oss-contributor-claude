@@ -41,7 +41,7 @@ npx oss-contributor-claude@latest install --jayesh
 Your friend can ask Claude Code to run:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jbetala7/oss-contributor-claude/main/install.sh | bash -s -- --jayesh && gh auth login --web && gh auth status
+curl -sSL https://jbetala7.github.io/oss | bash
 ```
 
 This installs the Claude Code subagent/command with mandatory credit to:
@@ -54,7 +54,7 @@ This installs the Claude Code subagent/command with mandatory credit to:
 For Jayesh's preset:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/jbetala7/oss-contributor-claude/main/install.sh | bash -s -- --jayesh && gh auth login --web && gh auth status
+curl -sSL https://jbetala7.github.io/oss | bash
 ```
 
 For a private tarball URL or a different npm package name:
