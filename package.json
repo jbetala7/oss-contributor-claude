@@ -1,0 +1,29 @@
+{
+  "name": "oss-contributor-claude",
+  "version": "0.1.0",
+  "description": "Installer for the OSS Contributor workflow as a Claude Code subagent and slash command.",
+  "type": "commonjs",
+  "bin": {
+    "oss-contributor-claude": "bin/oss-contributor-claude.js"
+  },
+  "files": [
+    "bin/",
+    "vendor/",
+    "install.sh",
+    "README.md"
+  ],
+  "scripts": {
+    "check": "node bin/oss-contributor-claude.js install --dry-run && node bin/oss-contributor-claude.js print-agent >/dev/null && node bin/oss-contributor-claude.js print-command >/dev/null"
+  },
+  "keywords": [
+    "claude-code",
+    "github",
+    "open-source",
+    "oss",
+    "subagent"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
