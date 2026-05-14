@@ -19,13 +19,15 @@ Run a contribution loop that optimizes for merged upstream PRs, not just local f
 
 0. Before choosing new work, refresh prior contribution state for recurring repos.
 1. Resolve the target repo, upstream, fork, default branch, and local checkout.
-2. Scan open issues and open PRs before choosing work.
-3. Filter to issues that are still broken on upstream `main`, unclaimed, and small enough for one PR.
+2. Run the PR collision hard gate before choosing work.
+3. Filter to issues that are still broken on upstream `main`, unclaimed, collision-free, and small enough for one PR.
 4. Verify the issue locally before editing.
-5. Implement narrowly, test, push, and open a clean PR.
-6. Record the result so the next contribution starts faster.
-7. Clear local build artifacts or temporary worktrees after a PR push/update.
-8. Track the PR until it is merged, closed, or needs follow-up.
+5. Implement narrowly only after the collision gate is clear.
+6. Re-run the PR collision hard gate immediately before publishing.
+7. Push and open a clean PR only if no canonical existing PR covers the fix.
+8. Record the result so the next contribution starts faster.
+9. Clear local build artifacts or temporary worktrees after a PR push/update.
+10. Track the PR until it is merged, closed, or needs follow-up.
 
 ## Modes
 
@@ -46,6 +48,7 @@ Use when the user wants a full contribution from issue to PR.
 
 Deliver:
 - chosen issue
+- PR collision proof and canonical-PR decision
 - proof it is still real on upstream `main`
 - implementation and tests
 - branch name
@@ -123,16 +126,56 @@ For OpenClaw specifically:
 - If the repo has a profile in `references/`, read it before scanning.
 - If the user wants code changes, make sure the local checkout is clean enough to branch safely.
 
-### 2. Scan issue and PR state before choosing work
+### 2. PR collision hard gate
+
+This gate is mandatory before coding and mandatory again after the final
+upstream fetch immediately before publishing. It is a stop condition, not a
+soft preference.
 
 Always do all of these:
 - search open issues
 - search open PRs
 - search open PRs by issue number when one exists
 - search open PRs by keywords from the issue title and problem area
+- search open and recently closed PRs by the affected subsystem, error text,
+  user-visible behavior, and likely touched file paths
+- inspect any plausible overlapping PR deeply enough to decide whether it is
+  canonical, incomplete-but-salvageable, stale, abandoned, or unrelated
+- record the searched terms and the best matching PR numbers in the run notes
+
+A PR is a collision if it targets the same user-visible bug, same failing code
+path, same stack trace, same issue, or same effective fix, even when its title
+or implementation differs. If unsure, treat it as a collision until proven
+otherwise.
+
+If a collision exists:
+- do not create a new branch, commit, or PR for the same fix
+- make the older open PR the canonical item when it has a plausible fix,
+  after-fix proof, maintainer/reviewer activity, or useful discussion
+- if the canonical PR is owned by the operator and editable, check out that PR
+  branch and update it instead of opening a second PR
+- if the canonical PR is from someone else, do not try to push to it unless the
+  maintainer or PR author explicitly allows it; instead leave a concise comment
+  with reproduction evidence, missing test coverage, or the exact improvement
+  needed
+- if the canonical PR is incomplete or wrong, prefer commenting with evidence,
+  review feedback, or a suggested patch over opening a competing PR
+- open a competing PR only when a maintainer explicitly asks for it, or when
+  the existing PR is closed, abandoned, or demonstrably unusable and the user
+  explicitly approves the exception after seeing the collision evidence
+- when an exception is approved, link and credit the prior PR in the new PR body
+  and explain why a separate PR is necessary
+
+If a late collision is found after implementation but before publish:
+- stop before pushing or opening a PR
+- summarize the local diff and the canonical PR
+- recommend either porting the useful change into the canonical PR path,
+  commenting on that PR, or abandoning the local branch
+- do not publish "just in case"
 
 Reject candidates if:
 - an open PR clearly covers the same fix
+- an open PR may cover the same fix and you have not disproven overlap
 - upstream `main` already contains the fix
 - the issue is stale and contradicted by current code
 - the scope is too broad for one clean PR
@@ -187,6 +230,8 @@ Open a PR only after:
 - the root cause is understood
 - the branch contains one issue's worth of work
 - a fresh upstream fetch confirmed the branch still sits on the current default-branch tip, or you have rebased/rebranched accordingly
+- the PR collision hard gate was re-run after the final upstream fetch and no
+  canonical existing PR covers the fix
 - no unrelated changes remain in scope
 
 If a GitHub publish workflow or helper skill exists, prefer it for the final commit, push, and PR steps.
@@ -289,16 +334,20 @@ For each candidate, report:
 - why it is promising
 - why it may fail
 - PR collision status
+- canonical PR if any, with the recommended action instead of a new PR
 - recommendation level
 
 ### For `ship`
 
 Report:
 - chosen issue
+- collision searches run and canonical-PR decision
 - validation evidence
 - concise change summary
 - tests run
 - PR link
+- if blocked by collision, report the canonical PR and recommended comment or
+  update path instead of a PR link
 - next-best candidate if the user wants to continue the streak
 
 ### For `track`

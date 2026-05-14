@@ -345,6 +345,9 @@ This is a Claude Code port of the Codex OSS Contributor workflow.
 - Keep contribution state in \`~/.claude/oss-contributor/state.json\` and \`~/.claude/oss-contributor/log.md\` when tracking prior PRs.
 - If repository-specific notes exist in \`~/.claude/oss-contributor/references/\`, read the relevant profile before scanning or shipping work.
 - For commit attribution, use GitHub's \`Co-authored-by: Name <email>\` trailer format.
+- Duplicate PR prevention is a hard gate. Run the PR collision search before
+  coding and again before publishing; if a canonical PR already exists, comment
+  or update that PR path instead of opening another PR.
 ${coauthorSection}
 ${body}
 `;

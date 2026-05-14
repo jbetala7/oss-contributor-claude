@@ -49,6 +49,11 @@ This installs the Claude Code subagent/command with mandatory credit to:
 - `Co-authored-by: Jayesh Betala <55358314+jbetala7@users.noreply.github.com>`
 - PR body/comment mention: `@jbetala7`
 
+The installed workflow has a hard duplicate-PR gate: it must search related
+open and recently closed PRs before coding and again before publishing. If a
+canonical PR already exists, it should comment on or update that path instead of
+opening another near-duplicate PR.
+
 ## Curl installer after hosting this repo
 
 For Jayesh's preset:
