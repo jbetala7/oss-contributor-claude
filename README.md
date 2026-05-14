@@ -38,10 +38,10 @@ npx oss-contributor-claude@latest install --jayesh
 
 ## One-line install for Claude Code
 
-After this package is hosted in a public GitHub repo at `jbetala7/oss-contributor-claude`, your friend can ask Claude Code to run:
+Your friend can ask Claude Code to run:
 
 ```bash
-npx --yes github:jbetala7/oss-contributor-claude install --jayesh && gh auth login --web && gh auth status
+curl -fsSL https://raw.githubusercontent.com/jbetala7/oss-contributor-claude/main/install.sh | bash -s -- --jayesh && gh auth login --web && gh auth status
 ```
 
 This installs the Claude Code subagent/command with mandatory credit to:
@@ -50,12 +50,6 @@ This installs the Claude Code subagent/command with mandatory credit to:
 - PR body/comment mention: `@jbetala7`
 
 ## Curl installer after hosting this repo
-
-Host `install.sh` somewhere public, then:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/YOU/oss-contributor-claude/main/install.sh | bash -s -- --credit "Your Name <your@users.noreply.github.com>" --credit-github yourhandle
-```
 
 For Jayesh's preset:
 

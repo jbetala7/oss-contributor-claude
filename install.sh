@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PACKAGE_REF="${OSS_CONTRIBUTOR_CLAUDE_PACKAGE:-oss-contributor-claude@latest}"
+PACKAGE_REF="${OSS_CONTRIBUTOR_CLAUDE_PACKAGE:-https://github.com/jbetala7/oss-contributor-claude/archive/refs/heads/main.tar.gz}"
 
 if ! command -v node >/dev/null 2>&1; then
   echo "error: node is required" >&2
@@ -13,4 +13,4 @@ if ! command -v npx >/dev/null 2>&1; then
   exit 1
 fi
 
-exec npx --yes "$PACKAGE_REF" install "$@"
+exec npx --yes --package "$PACKAGE_REF" oss-contributor-claude install "$@"
